@@ -1,0 +1,6 @@
+@(date: String, users: List)
+
+@date
+@for(user <- users) {
+    <li>@user.name</li>
+}
