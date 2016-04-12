@@ -16,7 +16,7 @@ mysql -uroot -proot < src/main/resources/init.sql
 \$ ./sbt
 > slick
 > exit
-cp -R src/main/slick src/main/scala
+cp -R src/main/slick/* src/main/scala
 ```
 
 edit $name;format="Camel"$Swagger.scala
