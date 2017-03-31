@@ -1,7 +1,8 @@
 package $package$.utils
 
 import $package$.support.{ConfigSupport, DatabaseSupport}
-import slick.driver.MySQLDriver
+import slick.jdbc.MySQLProfile
+import slick.relational.RelationalProfile.ColumnOption.Length
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -17,7 +18,7 @@ object CodeGen extends App with DatabaseSupport with ConfigSupport {
   val output = args(0)
   val pkg = getString("gen.pkg")
   // fetch data model
-  val modelAction = MySQLDriver.createModel(Some(MySQLDriver.defaultTables))
+  val modelAction = MySQLProfile.createModel(Some(MySQLProfile.defaultTables))
   // you can filter specific tables here
   val modelFuture = db.run(modelAction)
   // customize code generator
@@ -107,6 +108,11 @@ class \$name(tag: Tag) extends Table[\$newElementType](tag, \${args.mkString(", 
         // 去掉无用的类型声明
         override def code =
           s"""val \$name = column[\$actualType]("\${model.name}"\${options.map(", " + _).mkString("")})"""
+
+        override def columnOptionCode = {
+          case Length(length, varying) => None
+          case o => super.columnOptionCode(o)
+        }
       }
 
       override def code: Seq[String] = definitions.flatMap(_.getEnabled).filterNot(d => d.isInstanceOf[EntityType]).map(_.docWithCode)
@@ -127,7 +133,7 @@ object \${container} extends {
   val p = \$profile
 } with \${container}
 trait \${container}\${parentType.map(t => s" extends \$t").getOrElse("")} {
-  val profile: slick.driver.JdbcProfile = \${container}.p
+  val profile: slick.jdbc.JdbcProfile = \${container}.p
   import profile.api._
   \${indent(code)}
 }
@@ -138,6 +144,6 @@ trait \${container}\${parentType.map(t => s" extends \$t").getOrElse("")} {
   )
   val codegen = Await.result(codegenFuture, Duration.Inf)
   codegen.writeToFile(
-    "slick.driver.MySQLDriver", output, pkg, "Tables", "Tables.scala"
+    "slick.jdbc.MySQLDriver", output, pkg, "Tables", "Tables.scala"
   )
 }

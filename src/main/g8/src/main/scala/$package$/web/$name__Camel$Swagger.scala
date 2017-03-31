@@ -11,6 +11,7 @@ case class User(@p(description = "User Id") id: Long,
                 @p(description = "User Name") name: String)
 
 class $name;format="Camel"$Swagger extends $name;format="Camel"$Stack with $name;format="Camel"$Database {
+  override protected def applicationDescription = "用户管理"
   post("/user", api[List[User], Unit]("List users")) {
     List(
       User(1, "haha"),

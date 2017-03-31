@@ -20,7 +20,6 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.3.0",
   "com.typesafe.slick" %% "slick" % "$slick_version$",
   "com.typesafe.slick" %% "slick-hikaricp" % "$slick_version$",
-  "com.typesafe.slick" %% "slick-extensions" % "3.1.0",
   "me.lessis" %% "courier" % "0.1.3",
   "org.quartz-scheduler" % "quartz" % "2.2.2",
   "commons-net" % "commons-net" % "3.4",
